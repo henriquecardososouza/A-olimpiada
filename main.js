@@ -30351,5 +30351,5 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
-mudaTela(telas.jogo.capitulo5.fase1);
+mudaTela(telas.menuInicial);
 loop();
