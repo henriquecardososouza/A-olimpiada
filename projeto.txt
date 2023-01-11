@@ -1,0 +1,116 @@
+* Cada capítulo terá um total de 5 fases;
+
+* Para avançar para o próximo capítulo será necessária uma classificação mínima de 2 estrelas em cada fase do capítulo
+
+* O jogo conterá 6 capítulos; Cores, números, inglês, memória, raciocínio lógico e boss final.
+
+
+* Haverá um capítulo bônus desbloqueável ao se conseguir uma classificação de 3 estrelas em todas as fases de cada capítulo.
+
+* História;
+
+	Você estuda em uma escola, e esta decide promover uma olimpíada entre seus alunos, então logo que você vê o anúncio decide participar. As fases serão seus estudos, os bosses seus adversários na olimpíada, cada capítulo é uma fase da olimpíada. O capítulo bônus é uma participação em show do milhão, ele será desbloqueado ao você possuir um desempenho de 100% no jogo inteiro, o que chamará atenção dos promovedores deste minigame, que o convidaram a participar.
+
+* Capítulo 1 (Cores):
+
+- Fase 1:
+	Será uma fase de apresentação das cores, será apresentado uma cor e será solicitado seu nome, também haverá o inverso, será apresentado um nome e deverá ser solicitado qual é a cor que possui aquela nomeclatura. (com tempo)
+
+- Fase 2:
+	Será uma fase de predominância, será apresentado um círculo com algumas cores o preenchendo, será perguntado qual cor está em predominancia no círculo, ou qual está mais escassa. (com alternativas e tempo)
+
+- Fase 3:
+	Será uma fase de mix de cores, será apresentado uma cor e será perguntado quais cores foram utilizadas para formar tal cor. (com alternativas e tempo)
+
+- Fase 4:
+	Será uma fase de perguntas, exemplos são: "Qual das cores a seguir é formada pela mistura de vermelho e verde?", "Quais das cores a seguir começam com a mesma inicial?". (com alternativas e tempo)
+
+
+- Fase 5:
+	Atual fase já pronta, será apresentado o nome de uma cor e será perguntado qual é a cor do texto, e não a cor que ele está nomeando. (com alternativas e tempo)
+
+- Boss:
+	Perguntas temáticas das fases anteriores. (com alternativas e tempo)
+
+* Capítulo 2 (Números):
+
+- Fase 1:
+	Fase de apresentação, serão apresentados os números de 0 a 10 e perguntados os seus nomes, e vice-versa. (com tempo)
+
+- Fase 2: 
+	Fase de contas, serão cobradas contas de mais e menos. (com tempo)
+
+- Fase 3:
+	Fase de contas, serão cobradas contas de multiplicação e divisão. (com tempo)
+
+- Fase 4:
+	Fase de contas, serão cobradas contas de potênciação e raíz quadrada. (com tempo)
+
+- Fase 5:
+	Fase de contas, serão cobradas equações básicas. (com tempo)
+
+- Boss:
+	Perguntas temáticas das fases anteriores. (com alternativas e tempo)
+
+* Capítulo 3 (Inglês):
+
+- Fase 1:
+	Cores em inglês. (com tempo)
+
+- Fase 2:
+	Números em inglês. (com tempo)
+
+-Fase 3:
+	Objetos em inglês. (com tempo)
+
+- Fase 4:
+	Traduzir expressões em inglês para português. (com alternativas)
+
+- Fase 5:
+	Responder expressões em inglês. (com alternativas e tempo)
+
+- Boss:
+	Perguntas e respostas em inglês. (com alternativas e tempo)
+
+* Capítulo 4 (Memória):
+
+- Fase 1:
+	Quantos objetos de cada cor haviam? (com alternativas e tempo)
+
+- Fase 2:
+	Quantos objetos do tipo x haviam? (com alternativas e tempo)
+
+- Fase 3:
+	Jogo da memória. (com tempo)
+
+- Fase 4:
+	Em que número cheguei? Será apresentado passos e no final será perguntado que resultado foi obtido. (com alternativas e tempo)
+
+- Fase 5:
+	Serão feitas 5 perguntas aleatórias, e depois será perguntado qual foi a primeira/segunda/.../quinta pergunta que foi feita? (com alternativas e tempo)
+
+- Boss:
+	Perguntas e respostas sobre as fases anteriores. (com alternativas e tempo)
+
+* Capítulo 5 (Raciocínio lógico):
+
+- Fase 1:
+	3 problemas de raciocínio lógico. (com alternativas)
+
+- Fase 2:
+	3 labirintos, cada um deles possuirá 3 possíveis caminhos e será perguntado qual dos 3 caminhos realmente chega no final. (com alternativas)
+
+- Fase 3:
+	5 problemas matemáticos de raciocínio lógico. (com alternativas e tempo)
+
+- Fase 4:
+	Atual fase 4. (com alternativas e tempo)
+
+- Fase 5:
+	Será mostrada uma palavra incompleta, você deverá dizer qual letra está faltando. (com tempo)
+
+- Boss:
+	Perguntas sobre as fases anteriores. (com alternativas e tempo)
+
+- Capítulo final:
+	Um show, estilo torta na cara, onde você deverá ganhar do seu oponente. serão perguntas relacionadas aos 5 capítulos anteriores. (com alternativas e tempo)
