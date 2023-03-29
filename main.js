@@ -3376,81 +3376,180 @@ const telas = {
 
     cutscenes: {
         intro: {
+            parte: 0,
+
             desenha() {
-                this.dialog.desenha();
+                this.partes[this.parte].desenha();
             },
+            
+            partes: [
+                {
+                    spr: new Image(),
+                    onload: true,
+                    x: -120,
 
-            dialog: {
-                x: 300,
-                y: 400,
-                larg: 600,
-                alt: 200,
-                texto: "",
-                limChar: 0,
-                qualFala: 0,
-                counter: 0,
-                alpha: 0,
-                couneter2: 0,
+                    desenha() {
+                        this.atualiza();
 
-                falas: [
-                    "Olá alunos!",
-                    "Hoje irei realizar um importante anúncio",
-                    "Daqui a uma semana daremos início as nossas olipíadas escolares"
-                ],
+                        ctx.drawImage(
+                            this.spr, this.x, 0
+                        )
 
-                desenha() {
-                    this.atualiza();
+                        this.background.desenha();
+                    },
 
-                    ctx.fillStyle = "black";
-                    ctx.fillRect(this.x, this.y, this.larg, this.alt);
+                    atualiza() {
+                        if (this.onload) {
+                            this.spr.src = "./sprites/jogo/cutscenes/intro/0/spr.webp";
+                            this.onload = false;
+                        }
 
-                    ctx.lineWidth = 3;
-                    ctx.strokeStyle = "white";
-                    ctx.strokeRect(this.x, this.y, this.larg, this.alt);
+                        this.x += 0.2;
+                    },
 
-                    ctx.font = "30px 'Silkscreen'";
-                    ctx.fillStyle = "white";
-                    ctx.textAlign = "left";
-                    ctx.fillText(this.falas[this.qualFala].substring(0, this.limChar), this.x + 20, this.y + 100);
+                    background: {
+                        alpha: 1,
+                        counter: 0,
 
-                    ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                    ctx.font = "20px 'Silkscreen'";
-                    ctx.fillText("Pressione enter", 1050, 620);
-                },
+                        desenha() {
+                            this.atualiza();
 
-                atualiza() {
-                    if (this.limChar < this.falas[this.qualFala].length) {
-                        this.counter ++;
+                            ctx.globalAlpha = this.alpha;
 
-                        if (this.counter > 5) {
-                            this.limChar ++;
-                            this.counter = 0;
+                            ctx.fillStyle = "black";
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                            ctx.globalAlpha = 1;
+                        },
+
+                        atualiza() {
+                            this.counter ++;
+
+                            if (this.counter > 60) {
+                                if (this.alpha > 0.01) {
+                                    this.alpha -= 0.005;
+                                }
+
+                                if (this.counter > 540) {
+                                    telas.cutscenes.intro.parte ++;
+                                }
+                            }
                         }
                     }
+                },
 
-                    else {
-                        if (this.counter < 60) {
-                            this.counter ++;
+                {
+                    spr: new Image(),
+                    onload: true,
+
+                    desenha() {
+                        this.atualiza();
+
+                        ctx.drawImage(
+                            this.spr,
+                            0, 0,
+                            1984, 1024,
+                            0, 0,
+                            1280, 720
+                        )
+
+                        this.background.desenha();
+                    },
+
+                    atualiza() {
+                        if (this.onload) {
+                            this.spr.src = "./sprites/jogo/cutscenes/intro/1/spr.png";
+                            this.onload = false;
                         }
+                    },
 
-                        else {
-                            this.counter2 ++;
+                    background: {
+                        alpha: 1,
 
-                            if (this.counter2 < 30) {
-                                this.alpha = 1;
+                        desenha() {
+                            this.atualiza();
+
+                            ctx.globalAlpha = this.alpha;
+
+                            ctx.fillStyle = "black";
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                            ctx.globalAlpha = 1;
+                        },
+
+                        atualiza() {
+                            if (this.alpha > 0.005) {
+                                this.alpha -= 0.005;
+                            }
+                        }
+                    },
+
+                    pessoas: {
+                        obj: [],
+                        onload: true,
+                        globalPath: "./sprites/jogo/cutscenes/intro/1/spr",
+
+                        desenha() {
+                            this.atualiza();
+                        },
+
+                        atualiza() {
+                            class Pessoa {
+                                spr = new Image();
+                                counter = Math.floor(Math.random() * 60);
+                                pos = [{x, y}, {x, y}];
+                                posAtual;
+
+                                constructor(x, y, num) {
+                                    this.pos[0].x = x;
+                                    this.pos[0].y = y;
+                                    this.pos[1].x = x;
+                                    this.pos[1].y = y - 10;
+                                    this.spr.src = "./sprites/jogo/cutscenes/intro/1/spr" + num + ".png";
+                                    this.num = num;
+                                }
+
+                                desenha() {
+                                    this.atualiza();
+
+                                    ctx.drawImage(
+                                        this.spr,
+                                        0, 0,
+                                        28, this.alt,
+                                        this.pos[this.posAtual].x, this.pos[this.posAtual].y,
+                                        
+                                    )
+                                }
+
+                                atualiza() {
+                                    this.counter ++;
+
+                                    if (this.counter < 30) {
+                                        this.posAtual = 0;
+                                    }
+
+                                    else if (this.counter < 60) {
+                                        this.posAtual = 1;
+                                    }
+
+                                    else {
+                                        this.counter = 0;
+                                    }
+                                }
                             }
 
-                            else if (this.counter2 < 60) {
-                                this.alpha = 0;
-                            }
+                            if (this.onload) {
 
-                            else {
-                                this.counter2 = 0;
+                                this.obj.push(
+                                    new Pessoa(129, 746, 0)
+                                )
+
+                                this.onload = false;
                             }
                         }
                     }
                 }
-            }
+            ]
         }
     },
 
@@ -3702,6 +3801,14 @@ const telas = {
 
                 for (let i = 0; i < 4; i++) {
                     if (!telas.lobby.levels.level[i].block && !telas.lobby.levels.level[i + 1].block) {
+                        ctx.beginPath();
+                        ctx.lineWidth = 25;
+                        ctx.strokeStyle = "black";
+                        ctx.moveTo(telas.lobby.levels.level[i].x + 64, telas.lobby.levels.level[i].y + 64);
+                        ctx.lineTo(telas.lobby.levels.level[i + 1].x + 64, telas.lobby.levels.level[i + 1].y + 64);
+                        ctx.stroke();
+                        ctx.closePath();
+                        
                         ctx.beginPath();
                         ctx.strokeStyle = "yellow";
                         ctx.lineWidth = 20;
@@ -3974,6 +4081,49 @@ const telas = {
         capitulo1: {
             //cores
 
+            abertura: {
+                alpha: 0,
+                counter: 0,
+
+                desenha() {
+                    this.atualiza();
+
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.globalAlpha = this.alpha;
+
+                    ctx.fillStyle = "white";
+                    ctx.textAlign = "center";
+                    ctx.font = "100px 'Share Tech Mono'";
+                    ctx.fillText("Capítulo 1", canvas.width / 2, canvas.height / 2);
+
+                    ctx.font = "50px 'Silkscreen'";
+                    ctx.fillText("Cores", canvas.width / 2, canvas.height / 2 + 165);
+
+                    ctx.globalAlpha = 1;
+                },
+
+                atualiza() {
+                    this.counter ++;
+
+                    if (this.counter < 180 && this.alpha < 0.99) {
+                        this.alpha += 0.01;
+                    }
+
+                    else if (this.counter > 360) {
+                        if (this.alpha > 0.01) {
+                            this.alpha -= 0.01;
+                        }
+
+                        else {
+                            telas.jogo.capitulo1.fase1.reset();
+                            mudaTela(telas.jogo.capitulo1.fase1);
+                        }
+                    }
+                }
+            },
+
             fase1: {
                 parte: 1,
                 points: 0,
@@ -4021,10 +4171,14 @@ const telas = {
                     this.principal.temporizador.texto = 10;
 
                     this.final.aprovado = false;
+
+                    this.final.botoes.exit.hover = false;
+                    this.final.botoes.play.hover = false;
+                    this.final.botoes.retry.hover = false;
+
                     this.final.stars.counter = 0;
                     this.final.stars.onload = true;
                     this.final.stars.disparaCounter = true;
-
                     this.final.stars.spriteX1 = 0;
                     this.final.stars.spriteX2 = 0;
                     this.final.stars.spriteX3 = 0;
@@ -4035,6 +4189,9 @@ const telas = {
                 tutorial: {
                     parte: 1,
                     alpha: 1,
+                    counter: 0,
+                    img: new Image(),
+                    onload: true,
 
                     desenha() {
                         this.background.desenha();
@@ -4042,7 +4199,7 @@ const telas = {
                         if (this.parte == 1) {
                             ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
-                            ctx.font = "70px 'Silkscreen'";
+                            ctx.font = "50px 'Silkscreen'";
                             ctx.textAlign = "center";
                             ctx.fillStyle = "black";
                             ctx.fillText("Escreva o nome da cor", canvas.width / 2 + 5, canvas.height / 2 + 5);
@@ -4053,26 +4210,37 @@ const telas = {
                             ctx.lineWidth = 6;
                             ctx.strokeStyle = "black";
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 550, canvas.height / 2 + 10 + 15 + 5);
-                            ctx.lineTo(canvas.width / 2 - 550 + 1100, canvas.height / 2 + 10 + 15 + 5);
+                            ctx.moveTo(canvas.width / 2 - 400, canvas.height / 2 + 10 + 15 + 5);
+                            ctx.lineTo(canvas.width / 2 + 400, canvas.height / 2 + 10 + 15 + 5);
                             ctx.stroke();
                             ctx.closePath();
 
                             ctx.strokeStyle = "white";
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 550, canvas.height / 2 + 10 + 15);
-                            ctx.lineTo(canvas.width / 2 - 550 + 1100, canvas.height / 2 + 10 + 15);
+                            ctx.moveTo(canvas.width / 2 - 400, canvas.height / 2 + 10 + 15);
+                            ctx.lineTo(canvas.width / 2 + 400, canvas.height / 2 + 10 + 15);
                             ctx.stroke();
                             ctx.closePath();
 
                             this.atualiza();
-                            ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                            ctx.textAlign = "center";
-                            ctx.font = "30px 'Silkscreen'";
-                            ctx.fillText("Clique para continuar", canvas.width / 2 +5, canvas.height - 30 + 5);
+                            
+                            ctx.globalAlpha = this.alpha;
 
-                            ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                            ctx.lineWidth = 5;
+                            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                            ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                            ctx.drawImage(
+                                this.img,
+                                0, 0,
+                                512, 512,
+                                canvas.width - 100, canvas.height - 100,
+                                64, 64
+                            )
+                            
+                            ctx.globalAlpha = 1;
                         }
 
                         else {
@@ -4081,6 +4249,11 @@ const telas = {
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -5243,6 +5416,10 @@ const telas = {
                     this.principal.temporizador.counter = 0;
                     this.principal.temporizador.texto = 10;
 
+                    this.principal.solucao.alters.forEach(item => {
+                        item.hover = false;
+                    })
+
                     this.final.aprovado = false;
                     this.final.stars.disparaCounter = true;
                     this.final.stars.counter = 0;
@@ -5264,6 +5441,8 @@ const telas = {
                     parte: 1,
                     alpha: 1,
                     counter: 0,
+                    img: new Image(),
+                    onload: true,
 
                     desenha() {
                         this.background.desenha();
@@ -5274,7 +5453,7 @@ const telas = {
                             ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                            ctx.font = "65px 'Silkscreen'";
+                            ctx.font = "50px 'Silkscreen'";
                             ctx.textAlign = "center";
                             ctx.fillStyle = "black";
                             ctx.fillText("Escolha a cor mais", canvas.width / 2 + 5, canvas.height / 2 + 5 - 20);
@@ -5288,45 +5467,61 @@ const telas = {
 
                             ctx.strokeStyle = "black";
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 420 + 5, canvas.height / 2 + 5);
-                            ctx.lineTo(canvas.width / 2 + 420 + 5, canvas.height / 2 + 5);
+                            ctx.moveTo(canvas.width / 2 - 320 + 5, canvas.height / 2 + 5);
+                            ctx.lineTo(canvas.width / 2 + 320 + 5, canvas.height / 2 + 5);
                             ctx.stroke();
                             ctx.closePath();
 
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 550 + 5, canvas.height / 2 + 70 + 10 + 5);
-                            ctx.lineTo(canvas.width / 2 + 550 + 5, canvas.height / 2 + 70 + 10 + 5);
+                            ctx.moveTo(canvas.width / 2 - 420 + 5, canvas.height / 2 + 70 + 10 + 5);
+                            ctx.lineTo(canvas.width / 2 + 420 + 5, canvas.height / 2 + 70 + 10 + 5);
                             ctx.stroke();
                             ctx.closePath();
 
                             ctx.strokeStyle = "white";
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 420, canvas.height / 2);
-                            ctx.lineTo(canvas.width / 2 + 420, canvas.height / 2);
+                            ctx.moveTo(canvas.width / 2 - 320, canvas.height / 2);
+                            ctx.lineTo(canvas.width / 2 + 320, canvas.height / 2);
                             ctx.stroke();
                             ctx.closePath();
 
                             ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 550, canvas.height / 2 + 70 + 10);
-                            ctx.lineTo(canvas.width / 2 + 550, canvas.height / 2 + 70 + 10);
+                            ctx.moveTo(canvas.width / 2 - 420, canvas.height / 2 + 70 + 10);
+                            ctx.lineTo(canvas.width / 2 + 420, canvas.height / 2 + 70 + 10);
                             ctx.stroke();
                             ctx.closePath();
 
-                            ctx.textAlign = "center";
-                            ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                            ctx.font = "30px 'Silkscreen'";
-                            ctx.fillText("Clique para continuar", canvas.width / 2 + 5, canvas.height - 30 + 5);
+                            
+                            ctx.globalAlpha = this.alpha;
 
-                            ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                            ctx.lineWidth = 5;
+                            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                            ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                            ctx.drawImage(
+                                this.img,
+                                0, 0,
+                                512, 512,
+                                canvas.width - 100, canvas.height - 100,
+                                64, 64
+                            )
+                            
+                            ctx.globalAlpha = 1;
                         }
 
                         else {
-                            telas.jogo.capitulo1.fase1.tutorialAllow = false;
+                            telas.jogo.capitulo1.fase2.tutorialAllow = false;
                         }
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -6308,9 +6503,10 @@ const telas = {
 
                 tutorial: {
                     parte: 1,
-
                     counter: 0,
                     alpha: 1,
+                    onload: true,
+                    img: new Image(),
 
                     desenha() {
                         this.background.desenha();
@@ -6359,13 +6555,23 @@ const telas = {
                             ctx.stroke();
                             ctx.closePath();
 
-                            ctx.textAlign = "center";
-                            ctx.font = "30px 'Silkscreen'";
-                            ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2 + 5, canvas.height - 30 + 5);
+                            ctx.globalAlpha = this.alpha;
+
+                            ctx.lineWidth = 5;
+                            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                            ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                            ctx.drawImage(
+                                this.img,
+                                0, 0,
+                                512, 512,
+                                canvas.width - 100, canvas.height - 100,
+                                64, 64
+                            )
                             
-                            ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                            ctx.globalAlpha = 1;
                         }
 
                         else {
@@ -6374,6 +6580,11 @@ const telas = {
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -7434,6 +7645,8 @@ const telas = {
                     parte: 1,
                     alpha: 1,
                     counter: 0,
+                    img: new Image(),
+                    onload: true,
 
                     desenha() {
                         this.atualiza();
@@ -7450,51 +7663,66 @@ const telas = {
                         ctx.font = "50px 'Silkscreen'";
                         ctx.textAlign = "center";
                         ctx.fillStyle = "black";
-                        ctx.fillText("Escolha a cor correspondente", canvas.width / 2 + 5, canvas.height / 2 + 5);
-                        ctx.fillText("a cor do texto", canvas.width / 2 + 5, canvas.height / 2 + 65 + 5);
+                        ctx.fillText("Escolha a cor", canvas.width / 2 + 5, canvas.height / 2 + 5);
+                        ctx.fillText("correspondente a cor do texto", canvas.width / 2 + 5, canvas.height / 2 + 65 + 5);
                         
                         ctx.fillStyle = "white";
-                        ctx.fillText("Escolha a cor correspondente", canvas.width / 2, canvas.height / 2);
-                        ctx.fillText("a cor do texto", canvas.width / 2, canvas.height / 2 + 65);
+                        ctx.fillText("Escolha a cor", canvas.width / 2, canvas.height / 2);
+                        ctx.fillText("correspondente a cor do texto", canvas.width / 2, canvas.height / 2 + 65);
 
                         ctx.lineWidth = 5;
 
                         ctx.strokeStyle = "black";
                         ctx.beginPath();
-                        ctx.moveTo(canvas.width / 2 + 5 - 500, canvas.height / 2 + 5 + 10);
-                        ctx.lineTo(canvas.width / 2 + 5 + 500, canvas.height / 2 + 5 + 10);
+                        ctx.moveTo(canvas.width / 2 + 5 - 230, canvas.height / 2 + 5 + 10);
+                        ctx.lineTo(canvas.width / 2 + 5 + 230, canvas.height / 2 + 5 + 10);
                         ctx.stroke();
                         ctx.closePath();
 
                         ctx.beginPath();
-                        ctx.moveTo(canvas.width / 2 + 5 - 250, canvas.height / 2 + 5 + 65 + 10);
-                        ctx.lineTo(canvas.width / 2 + 5 + 250, canvas.height / 2 + 5 + 65 + 10);
+                        ctx.moveTo(canvas.width / 2 + 5 - 520, canvas.height / 2 + 5 + 65 + 10);
+                        ctx.lineTo(canvas.width / 2 + 5 + 520, canvas.height / 2 + 5 + 65 + 10);
                         ctx.stroke();
                         ctx.closePath();
 
                         ctx.strokeStyle = "white";
                         ctx.beginPath();
-                        ctx.moveTo(canvas.width / 2 - 500, canvas.height / 2 + 10);
-                        ctx.lineTo(canvas.width / 2 + 500, canvas.height / 2 + 10);
+                        ctx.moveTo(canvas.width / 2 - 230, canvas.height / 2 + 10);
+                        ctx.lineTo(canvas.width / 2 + 230, canvas.height / 2 + 10);
                         ctx.stroke();
                         ctx.closePath();
 
                         ctx.beginPath();
-                        ctx.moveTo(canvas.width / 2 - 250, canvas.height / 2 + 65 + 10);
-                        ctx.lineTo(canvas.width / 2 + 250, canvas.height / 2 + 65 + 10);
+                        ctx.moveTo(canvas.width / 2 - 520, canvas.height / 2 + 65 + 10);
+                        ctx.lineTo(canvas.width / 2 + 520, canvas.height / 2 + 65 + 10);
                         ctx.stroke();
                         ctx.closePath();
 
-                        ctx.textAlign = "center";
-                        ctx.font = "30px 'Silkscreen'";
-                        ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                        ctx.fillText("Clique para continuar", canvas.width / 2 + 5, canvas.height - 30 + 5);
+                        ctx.globalAlpha = this.alpha;
+
+                        ctx.lineWidth = 5;
+                        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+                        ctx.strokeStyle = "black";
+                        ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                        ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                        ctx.drawImage(
+                            this.img,
+                            0, 0,
+                            512, 512,
+                            canvas.width - 100, canvas.height - 100,
+                            64, 64
+                        )
                         
-                        ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                        ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                        ctx.globalAlpha = 1;
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -8577,6 +8805,9 @@ const telas = {
                     this.final.text.spriteX = 0;
                     this.final.text.counter = 0;
                     this.final.text.counter1 = 0;
+                    this.final.botoes.exit.hover = false;
+                    this.final.botoes.play.hover = false;
+                    this.final.botoes.retry.hover = false;
                 },
 
                 inicio: {
@@ -9658,7 +9889,50 @@ const telas = {
         },
 
         capitulo2: {
-            //matematica           
+            //numeros
+
+            abertura: {
+                alpha: 0,
+                counter: 0,
+
+                desenha() {
+                    this.atualiza();
+
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.globalAlpha = this.alpha;
+
+                    ctx.fillStyle = "white";
+                    ctx.textAlign = "center";
+                    ctx.font = "100px 'Share Tech Mono'";
+                    ctx.fillText("Capítulo 2", canvas.width / 2, canvas.height / 2);
+
+                    ctx.font = "50px 'Silkscreen'";
+                    ctx.fillText("Números", canvas.width / 2, canvas.height / 2 + 165);
+
+                    ctx.globalAlpha = 1;
+                },
+
+                atualiza() {
+                    this.counter ++;
+
+                    if (this.counter < 180 && this.alpha < 0.99) {
+                        this.alpha += 0.01;
+                    }
+
+                    else if (this.counter > 360) {
+                        if (this.alpha > 0.01) {
+                            this.alpha -= 0.01;
+                        }
+
+                        else {
+                            telas.jogo.capitulo2.fase1.reset();
+                            mudaTela(telas.jogo.capitulo2.fase1);
+                        }
+                    }
+                }
+            },
 
             fase1: {
                 parte: 1,
@@ -9727,6 +10001,8 @@ const telas = {
                     parte: 1,
                     alpha: 1,
                     counter: 0,
+                    img: new Image(),
+                    onload: true,
 
                     desenha() {
                         this.background.desenha();
@@ -9757,14 +10033,23 @@ const telas = {
                             ctx.stroke();
                             ctx.closePath();
 
-                            ctx.textAlign = "center";
-                            ctx.font = "30px 'Silkscreen'";
-                            
-                            ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2 + 5, canvas.height - 30 + 5);
+                            ctx.globalAlpha = this.alpha;
 
-                            ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                            ctx.lineWidth = 5;
+                            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                            ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                            ctx.drawImage(
+                                this.img,
+                                0, 0,
+                                512, 512,
+                                canvas.width - 100, canvas.height - 100,
+                                64, 64
+                            )
+                            
+                            ctx.globalAlpha = 1;
                         }
 
                         else {
@@ -9773,6 +10058,11 @@ const telas = {
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -9803,7 +10093,7 @@ const telas = {
                                 1280, 720
                             )
 
-                            ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+                            ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
                         },
 
@@ -9977,7 +10267,7 @@ const telas = {
 
                         desenha() {
                             this.atualiza();
-                            ctx.fillStyle = this.banco[this.numQuestao].cor;
+
                             ctx.font = "100px 'Silkscreen'";
                             ctx.textAlign = "center";
 
@@ -10921,6 +11211,8 @@ const telas = {
                     this.allowBotoes = false;
                     this.allowClick = false;
 
+                    this.tutorial.onload = true;
+
                     this.inicio.titulo.alpha = 0;
                     this.inicio.titulo.counter = 0;
                     this.inicio.titulo.entrando = true;
@@ -10935,6 +11227,9 @@ const telas = {
 
                     this.principal.temporizador.counter = 0;
                     this.principal.temporizador.texto = 10;
+
+                    this.principal.icon.onload = true;
+                    this.principal.enter = false;
 
                     this.final.aprovado = false;
                     this.final.stars.counter = 0;
@@ -10954,6 +11249,8 @@ const telas = {
                     parte: 1,
                     counter: 0,
                     alpha: 1,
+                    img: new Image(),
+                    onload: true,
 
                     desenha() {
                         this.background.desenha();
@@ -10961,21 +11258,45 @@ const telas = {
                         if (this.parte == 1) {
                             this.atualiza();
 
-                            this.solucao.desenha();
-                            this.temporizador.desenha();
-                            this.questao.desenha();
-
-                            ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-                            ctx.fillRect(0, 0, canvas.width, canvas.height);
                             ctx.font = "50px 'Silkscreen'";
                             ctx.textAlign = "center";
+                            ctx.fillStyle = "black";
+                            ctx.fillText("Resolva as operações", canvas.width / 2 + 5, canvas.height / 2 + 5);
+                            
                             ctx.fillStyle = "white";
-                            ctx.fillText("Resolva a operação", canvas.width / 2, canvas.height / 2);
+                            ctx.fillText("Resolva as operações", canvas.width / 2, canvas.height / 2);
 
-                            ctx.textAlign = "center";
-                            ctx.font = "30px 'Silkscreen'";
-                            ctx.fillStyle = "rgba(255, 255, 255, " + this.alpha + ")";
-                            ctx.fillText("Clique para continuar", canvas.width / 2, canvas.height - 30);
+                            ctx.lineWidth = 3;
+                            ctx.strokeStyle = "black";
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - 370 + 5, canvas.height / 2 + 10 + 5);
+                            ctx.lineTo(canvas.width / 2 + 370 + 5, canvas.height / 2 + 10 + 5);
+                            ctx.stroke();
+                            ctx.closePath();
+                            
+                            ctx.strokeStyle = "white";
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - 370, canvas.height / 2 + 10);
+                            ctx.lineTo(canvas.width / 2 + 370, canvas.height / 2 + 10);
+                            ctx.stroke();
+                            ctx.closePath();
+
+                            ctx.globalAlpha = this.alpha;
+
+                            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+                            ctx.strokeStyle = "black";
+                            ctx.fillRect(canvas.width - 110, canvas.height - 110, 84, 84);
+                            ctx.strokeRect(canvas.width - 110, canvas.height - 110, 84, 84);
+
+                            ctx.drawImage(
+                                this.img,
+                                0, 0,
+                                512, 512,
+                                canvas.width - 100, canvas.height - 100,
+                                64, 64
+                            )
+                            
+                            ctx.globalAlpha = 1;
                         }
 
                         else {
@@ -10984,6 +11305,11 @@ const telas = {
                     },
 
                     atualiza() {
+                        if (this.onload) {
+                            this.img.src = "./sprites/jogo/icons/enter.png";
+                            this.onload = false;
+                        }
+
                         this.counter ++;
 
                         if (this.counter < 30) {
@@ -10997,128 +11323,6 @@ const telas = {
                         else {
                             this.counter = 0;
                         }
-                    },
-
-                    questao: {
-                        banco: [
-                            {conta: "7 + 8", resposta: 15},
-                            {conta: "3 + 9", resposta: 12},
-                            {conta: "1 - 9", resposta: -8},
-                            {conta: "3 + 7 - 2", resposta: 8},
-                            {conta: "1 + 4", resposta: 5},
-                            {conta: "12 + 8", resposta: 20},
-                            {conta: "5 + 8 - 10", resposta: 3},
-                            {conta: "1 + 0 - 3 + 2", resposta: 0},
-                            {conta: "9 + 9", resposta: 18},
-                            {conta: "2 + 20", resposta: 22},
-                            {conta: "8 - 7", resposta: 1},
-                            {conta: "4 + 17", resposta: 21},
-                            {conta: "7 + 9 - 6", resposta: 10},
-                            {conta: "4 + 6 + 5", resposta: 15},
-                            {conta: "20 + 5 - 15", resposta: 10},
-                            {conta: "8 - 2 + 4", resposta: 10},
-                            {conta: "3 + 7 + 6 - 9", resposta: 7},
-                            {conta: "2 + 9 - 6", resposta: 5},
-                            {conta: "3 + 4", resposta: 7},
-                            {conta: "96 - 95", resposta: 1},
-                            {conta: "30 + 30", resposta: 60},
-                            {conta: "45 - 45 + 3", resposta: 3},
-                            {conta: "13 + 15", resposta: 28},
-                            {conta: "9 + 32", resposta: 41},
-                        ],
-
-                        numQuestao: 0,
-                        quantQuestoes: 0,
-                        x: canvas.width / 2,
-                        y: canvas.height / 2 - 100,
-
-                        onload: true,
-
-                        desenha() {
-                            this.atualiza();
-                            ctx.textAlign = "center";
-                            ctx.font = "100px 'Silkscreen'";
-                            ctx.fillStyle = "white";
-                            ctx.fillText(this.banco[this.numQuestao].conta, canvas.width / 2, canvas.height / 2 - 50);
-                        },
-
-                        atualiza() {
-                            if (this.onload) {
-                                this.numQuestao = Math.floor(Math.random() * this.banco.length);
-                                this.quantQuestoes ++;
-                                this.onload = false;
-                            }
-                        },
-                    },
-
-                    solucao: {
-                        resposta: "",
-                        alpha: 0,
-                        aparecendo: true,
-
-                        desenha() {
-                            ctx.strokeStyle = "black";
-                            ctx.lineWidth = 3;
-
-                            ctx.beginPath();
-                            ctx.moveTo(canvas.width / 2 - 400, canvas.height / 2 + 80 + 100);
-                            ctx.lineTo(canvas.width / 2 - 400 + 800, canvas.height / 2 + 80 + 100);
-                            ctx.stroke();
-                            ctx.closePath();
-
-                            ctx.font = "70px 'Silkscreen'";
-                            ctx.fillStyle = "white";
-                            ctx.textAlign = "center";
-                            ctx.fillText(this.resposta, canvas.width / 2, canvas.height / 2 + 150);
-
-                            if (this.resposta.length == 0) {
-                                ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
-                                ctx.fillText("Escreva aqui", canvas.width / 2, canvas.height / 2 + 150);
-                                this.atualiza();
-                            }
-                        },
-
-                        atualiza() {
-                            if (this.aparecendo) {
-                                if (this.alpha < 0.99) {
-                                    this.alpha += 0.01;
-                                }
-
-                                else {
-                                    this.aparecendo = false;
-                                }
-                            }
-
-                            else {
-                                if (this.alpha > 0.01) {
-                                    this.alpha -= 0.01;
-                                }
-
-                                else {
-                                    this.aparecendo = true;
-                                }
-                            }
-                            
-                        }
-                    },
-
-                    temporizador: {
-                        counter: 0,
-                        cor: "green",
-                        texto: 10,
-
-                        desenha() {
-                            ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-                            ctx.lineWidth = 3;
-                            ctx.strokeStyle = "white";
-                            ctx.fillRect(canvas.width - 80 - 40, 50 - 40, 80, 80);
-                            ctx.strokeRect(canvas.width - 80 - 40, 50 - 40, 80, 80);
-
-                            ctx.fillStyle = this.cor;
-                            ctx.font = "50px 'Silkscreen'";
-                            ctx.textAlign = "center";
-                            ctx.fillText(this.texto, canvas.width - 80, 65);
-                        },
                     },
 
                     background: {
@@ -11136,7 +11340,7 @@ const telas = {
                                 1280, 720
                             )
 
-                            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+                            ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
                         },
 
@@ -11220,11 +11424,30 @@ const telas = {
                 },
 
                 principal: {
+                    banco: [],
+                    enter: false,
+
                     desenha() {
                         this.background.desenha();
                         this.questao.desenha();
                         this.solucao.desenha();
                         this.temporizador.desenha();
+
+                        if (this.enter) {
+                            this.icon.desenha();
+                        }
+                    },
+
+                    verificaQuestao(numQuestao) {
+                        for (let i = 0; i < this.banco.length; i++) {
+                            if (this.banco[i] == numQuestao) {
+                                return false;
+                            }
+                        }
+
+                        this.banco.push(numQuestao);
+
+                        return true;
                     },
 
                     background: {
@@ -11244,6 +11467,10 @@ const telas = {
 
                             ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
                             ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                            ctx.strokeStyle = "white";
+                            ctx.fillRect(canvas.width / 2 - 450, canvas.height / 2 - 200, 900, 430);
+                            ctx.strokeRect(canvas.width / 2 - 450, canvas.height / 2 - 200, 900, 430);
                         },
 
                         atualiza() {
@@ -11256,30 +11483,30 @@ const telas = {
 
                     questao: {
                         banco: [
-                            {conta: "7 + 8", resposta: 15},
-                            {conta: "3 + 9", resposta: 12},
-                            {conta: "1 - 9", resposta: -8},
+                            {conta: "7 + 8", resposta: 15},//
+                            {conta: "3 + 9", resposta: 12},//
+                            {conta: "1 - 9", resposta: -8},//
                             {conta: "3 + 7 - 2", resposta: 8},
-                            {conta: "1 + 4", resposta: 5},
-                            {conta: "12 + 8", resposta: 20},
-                            {conta: "5 + 8 - 10", resposta: 3},
+                            {conta: "1 + 4", resposta: 5},//
+                            {conta: "12 + 8", resposta: 20},//
+                            {conta: "5 + 8 - 10", resposta: 3},//
                             {conta: "1 + 0 - 3 + 2", resposta: 0},
-                            {conta: "9 + 9", resposta: 18},
-                            {conta: "2 + 20", resposta: 22},
-                            {conta: "8 - 7", resposta: 1},
-                            {conta: "4 + 17", resposta: 21},
+                            {conta: "9 + 9", resposta: 18},//
+                            {conta: "2 + 20", resposta: 22},//
+                            {conta: "8 - 7", resposta: 1},//
+                            {conta: "4 + 17", resposta: 21},//
                             {conta: "7 + 9 - 6", resposta: 10},
-                            {conta: "4 + 6 + 5", resposta: 15},
+                            {conta: "4 + 6 + 5", resposta: 15},//
                             {conta: "20 + 5 - 15", resposta: 10},
-                            {conta: "8 - 2 + 4", resposta: 10},
-                            {conta: "3 + 7 + 6 - 9", resposta: 7},
-                            {conta: "2 + 9 - 6", resposta: 5},
-                            {conta: "3 + 4", resposta: 7},
-                            {conta: "96 - 95", resposta: 1},
-                            {conta: "30 + 30", resposta: 60},
+                            {conta: "8 - 2 + 4", resposta: 10},//
+                            {conta: "3 + 7 + 6 - 9", resposta: 7}, //
+                            {conta: "2 + 9 - 6", resposta: 5},//
+                            {conta: "3 + 4", resposta: 7},//
+                            {conta: "96 - 95", resposta: 1},//
+                            {conta: "30 + 30", resposta: 60},//
                             {conta: "45 - 45 + 3", resposta: 3},
-                            {conta: "13 + 15", resposta: 28},
-                            {conta: "9 + 32", resposta: 41},
+                            {conta: "13 + 15", resposta: 28},//
+                            {conta: "9 + 32", resposta: 41},//
                         ],
 
                         numQuestao: 0,
@@ -11291,16 +11518,185 @@ const telas = {
 
                         desenha() {
                             this.atualiza();
+                            
+                            ctx.font = "80px 'Silkscreen'";
                             ctx.textAlign = "center";
-                            ctx.font = "100px 'Silkscreen'";
+
+                            ctx.fillStyle = "black";
+                            ctx.fillText(this.banco[this.numQuestao].conta, canvas.width / 2 + 5, canvas.height / 2 - 100 + 5);
+
                             ctx.fillStyle = "white";
-                            ctx.fillText(this.banco[this.numQuestao].conta, canvas.width / 2, canvas.height / 2 - 50);
+                            ctx.fillText(this.banco[this.numQuestao].conta, canvas.width / 2, canvas.height / 2 - 100);
+
+                            let pos = {x: null, y: null};
+
+                            switch (this.numQuestao) {
+                                case 0: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 1: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 2: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 3: {
+                                    pos.x = 240;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 4: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 5: {
+                                    pos.x = 160;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 6: {
+                                    pos.x = 280;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 7: {
+                                    pos.x = 340;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 8: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 9: {
+                                    pos.x = 160;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 10: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 11: {
+                                    pos.x = 160;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 12: {
+                                    pos.x = 240;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 13: {
+                                    pos.x = 240;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 14: {
+                                    pos.x = 300;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 15: {
+                                    pos.x = 230;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 16: {
+                                    pos.x = 360;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 17: {
+                                    pos.x = 260;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 18: {
+                                    pos.x = 140;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 19: {
+                                    pos.x = 180;
+                                    pos.y = 80;
+                                    break;
+                                }
+                                
+                                case 20: {
+                                    pos.x = 220;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 21: {
+                                    pos.x = 310;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 22: {
+                                    pos.x = 190;
+                                    pos.y = 80;
+                                    break;
+                                }
+
+                                case 23: {
+                                    pos.x = 160;
+                                    pos.y = 80;
+                                    break;
+                                }
+                            }
+
+                            ctx.lineWidth = 6;
+                            ctx.strokeStyle = "black";
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - pos.x + 5, canvas.height / 2 - pos.y + 5);
+                            ctx.lineTo(canvas.width / 2 + pos.x + 5, canvas.height / 2 - pos.y + 5);
+                            ctx.stroke();
+                            ctx.closePath();
+
+                            ctx.strokeStyle = "white";
+                            ctx.beginPath();
+                            ctx.moveTo(canvas.width / 2 - pos.x, canvas.height / 2 - pos.y);
+                            ctx.lineTo(canvas.width / 2 + pos.x, canvas.height / 2 - pos.y);
+                            ctx.stroke();
+                            ctx.closePath();
                         },
 
                         atualiza() {
                             if (this.onload) {
                                 this.numQuestao = Math.floor(Math.random() * this.banco.length);
                                 this.quantQuestoes ++;
+                                telas.jogo.capitulo2.fase2.principal.verificaQuestao(this.numQuestao);
                                 this.onload = false;
                             }
                         },
@@ -11327,9 +11723,13 @@ const telas = {
                             ctx.fillText(this.resposta, canvas.width / 2, canvas.height / 2 + 150);
 
                             if (this.resposta.length == 0) {
-                                ctx.fillStyle = "rgba(0, 0, 0, " + this.alpha + ")";
+                                ctx.fillStyle = "rgba(127, 127, 127, " + this.alpha + ")";
                                 ctx.fillText("Escreva aqui", canvas.width / 2, canvas.height / 2 + 150);
                                 this.atualiza();
+                            }
+
+                            else {
+                                this.barra.desenha(this.resposta);
                             }
                         },
 
@@ -11337,15 +11737,17 @@ const telas = {
                             if (letra == "Enter") {
                                 if (this.resposta == telas.jogo.capitulo2.fase2.principal.questao.banco[telas.jogo.capitulo2.fase2.principal.questao.numQuestao].resposta) {
                                     telas.jogo.capitulo2.fase2.points ++;
+                                    telas.jogo.capitulo2.fase2.principal.icon.acerto = true;
+                                }
+
+                                else {
+                                    telas.jogo.capitulo2.fase2.principal.icon.acerto = false;
                                 }
 
                                 if (telas.jogo.capitulo2.fase2.principal.questao.quantQuestoes < 10) {
-                                    let num = telas.jogo.capitulo2.fase2.principal.questao.numQuestao;
-
-                                    while(num == telas.jogo.capitulo2.fase2.principal.questao.numQuestao) {
-                                        num = telas.jogo.capitulo2.fase2.principal.questao.numQuestao;
+                                    do {
                                         telas.jogo.capitulo2.fase2.principal.questao.numQuestao = Math.floor(Math.random() * telas.jogo.capitulo2.fase2.principal.questao.banco.length);
-                                    }
+                                    } while(!telas.jogo.capitulo2.fase2.principal.verificaQuestao(telas.jogo.capitulo2.fase2.principal.questao.numQuestao));
 
                                     telas.jogo.capitulo2.fase2.principal.questao.quantQuestoes ++;
                                 }
@@ -11357,6 +11759,8 @@ const telas = {
                                 this.resposta = "";
                                 telas.jogo.capitulo2.fase2.principal.temporizador.texto = 10;
                                 telas.jogo.capitulo2.fase2.principal.temporizador.counter = 0;
+                                telas.jogo.capitulo2.fase2.principal.icon.onload = true;
+                                telas.jogo.capitulo2.fase2.principal.enter = true;
                             }
 
                             else if (letra == "Backspace") {
@@ -11394,6 +11798,195 @@ const telas = {
                                     this.aparecendo = true;
                                 }
                             }
+                        },
+
+                        barra: {
+                            alpha: 1,
+                            counter: 0,
+
+                            desenha(string) {
+                                ctx.strokeStyle = "rgba(255, 255, 255, " + this.alpha + ")";
+                                ctx.lineWidth = 3;
+
+                                ctx.beginPath();
+                                ctx.moveTo(canvas.width / 2 + this.verificaLarg(string), canvas.height / 2 + 102.5);
+                                ctx.lineTo(canvas.width / 2 + this.verificaLarg(string), canvas.height / 2 + 152.5);
+                                ctx.stroke();
+                                ctx.closePath();
+
+                                this.atualiza();
+                            },
+
+                            atualiza() {
+                                this.counter ++;
+
+                                if (this.counter < 30) {
+                                    this.alpha = 0;
+                                }
+
+                                else if (this.counter < 60) {
+                                    this.alpha = 1;
+                                }
+
+                                else {
+                                    this.counter = 0;
+                                }
+                            },
+
+                            verificaLarg(string) {
+                                let larg = 0;
+
+                                for (let i = 0; i < string.length; i++) {
+                                    switch(string.substring(i, i + 1)) {
+                                        case "a": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "b": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "c": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "d": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "e": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        case "f": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        case "g": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "h": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "i": {
+                                            larg += 13;
+                                            break;
+                                        }
+
+                                        case "j": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "k": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "l": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        case "m": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "n": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "o": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "p": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "q": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "r": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "s": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "t": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        case "u": {
+                                            larg += 26.5;
+                                            break;
+                                        }
+
+                                        case "v": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "w": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "x": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "y": {
+                                            larg += 30.5;
+                                            break;
+                                        }
+
+                                        case "z": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        case " ": {
+                                            larg += 18;
+                                            break;
+                                        }
+
+                                        case "1": {
+                                            larg += 22;
+                                            break;
+                                        }
+
+                                        default: {
+                                            larg += 26.5;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                return larg;
+                            },
                         }
                     },
 
@@ -11439,29 +12032,70 @@ const telas = {
                                 }
 
                                 else {
-                                    this.texto = 10;
-                                    if (telas.jogo.capitulo2.fase2.principal.questao.quantQuestoes < 10) {
-                                        let num = telas.jogo.capitulo2.fase2.principal.questao.numQuestao;
-
-                                        while(num == telas.jogo.capitulo2.fase2.principal.questao.numQuestao) {
-                                            num = telas.jogo.capitulo2.fase2.principal.questao.numQuestao;
-                                            telas.jogo.capitulo2.fase2.principal.questao.numQuestao = Math.floor(Math.random() * telas.jogo.capitulo2.fase2.principal.questao.banco.length);
-                                        }
-
-                                        telas.jogo.capitulo2.fase2.principal.questao.quantQuestoes ++;
-                                    }
-                                    
-                                    else {
-                                        telas.jogo.capitulo2.fase2.parte = 3;
-                                    }
-    
                                     telas.jogo.capitulo2.fase2.principal.solucao.resposta = "";
+                                    telas.jogo.capitulo2.fase2.principal.solucao.inputs("Enter");
                                 }
 
                                 this.counter = 0;
                             }
                         },
                     },
+
+                    icon: {
+                        s: new Image(),
+                        x: 1000,
+                        y: 250,
+                        alpha: 1,
+                        counter: 0,
+                        acerto: null,
+                        onload: true,
+
+                        desenha() {
+                            this.atualiza();
+
+                            ctx.globalAlpha = this.alpha;
+
+                            ctx.drawImage(
+                                this.s,
+                                0, 0,
+                                512, 512,
+                                this.x, this.y,
+                                128, 128
+                            )
+
+                            ctx.globalAlpha = 1;
+                        },
+
+                        atualiza() {
+                            if (this.onload) {
+                                if (this.acerto) {
+                                    this.s.src = "./sprites/jogo/icons/accept.png";
+                                }
+
+                                else {
+                                    this.s.src = "./sprites/jogo/icons/decline.png";
+                                }
+
+                                this.y = 250;
+                                this.alpha = 1;
+                                this.counter = 0;
+                                this.onload = false;
+                            }
+
+                            this.y -= 3;
+                            this.counter ++;
+
+                            if (this.counter > 20) {
+                                if (this.alpha > 0.05) {
+                                    this.alpha -= 0.05;
+                                }
+
+                                else {
+                                    telas.jogo.capitulo2.fase2.principal.enter = false;
+                                }
+                            }
+                        },
+                    }
                 },
 
                 final: {
@@ -27798,7 +28432,9 @@ let saves = {
 }
 
 window.onload = function() {
-    save(0);
+    if (load(0) == null) {
+        save(0);
+    }
 }
 
 window.addEventListener("keydown", function(event) {
@@ -28076,15 +28712,43 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo1.fase1) {
-        if (telas.jogo.capitulo1.fase1.parte == 2 && !telas.jogo.capitulo1.fase1.tutorialAllow) {
+        if (telas.jogo.capitulo1.fase1.tutorialAllow && telas.jogo.capitulo1.fase1.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo1.fase1.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo1.fase1.parte == 2 && !telas.jogo.capitulo1.fase1.tutorialAllow) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo1.fase1.principal.solucao.inputs(event.key);
             }
         }
     }
 
+    else if (telaAtiva == telas.jogo.capitulo1.fase2) {
+        if (telas.jogo.capitulo1.fase2.tutorialAllow && telas.jogo.capitulo1.fase2.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo1.fase2.tutorial.parte ++;
+        }
+    }
+
+    else if (telaAtiva == telas.jogo.capitulo1.fase3) {
+        if (telas.jogo.capitulo1.fase3.tutorialAllow && telas.jogo.capitulo1.fase3.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo1.fase3.tutorial.parte ++;
+        }
+    }
+
+    else if (telaAtiva == telas.jogo.capitulo1.fase4) {
+        if (telas.jogo.capitulo1.fase4.tutorialAllow && telas.jogo.capitulo1.fase4.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo1.fase4.tutorial.parte ++;
+        }
+    }
+
     else if (telaAtiva == telas.jogo.capitulo2.fase1) {
-        if (telas.jogo.capitulo2.fase1.parte == 2) {
+        if (telas.jogo.capitulo2.fase1.tutorialAllow && telas.jogo.capitulo2.fase1.parte != 1) {
+            if (event.key == "Enter") {
+                telas.jogo.capitulo2.fase1.tutorial.parte ++;
+            }
+        }
+
+        else if (telas.jogo.capitulo2.fase1.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo2.fase1.principal.solucao.inputs(event.key);
             }
@@ -28092,7 +28756,13 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo2.fase2) {
-        if (telas.jogo.capitulo2.fase2.parte == 2) {
+        if (telas.jogo.capitulo2.fase2.tutorialAllow && telas.jogo.capitulo2.fase2.parte != 1) {
+            if (event.key == "Enter") {
+                telas.jogo.capitulo2.fase2.tutorial.parte ++;
+            }
+        }
+
+        else if (telas.jogo.capitulo2.fase2.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo2.fase2.principal.solucao.inputs(event.key);
             }
@@ -28100,7 +28770,11 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo2.fase3) {
-        if (telas.jogo.capitulo2.fase3.parte == 2) {
+        if (telas.jogo.capitulo2.fase3.tutorialAllow && telas.jogo.capitulo2.fase3.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo2.fase3.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo2.fase3.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo2.fase3.principal.solucao.inputs(event.key);
             }
@@ -28108,7 +28782,11 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo2.fase4) {
-        if (telas.jogo.capitulo2.fase4.parte == 2) {
+        if (telas.jogo.capitulo2.fase4.tutorialAllow && telas.jogo.capitulo2.fase4.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo2.fase4.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo2.fase4.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo2.fase4.principal.solucao.inputs(event.key);
             }
@@ -28116,7 +28794,11 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo3.fase1) {
-        if (telas.jogo.capitulo3.fase1.parte == 2) {
+        if (telas.jogo.capitulo3.fase1.tutorialAllow && telas.jogo.capitulo3.fase1.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo3.fase1.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo3.fase1.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo3.fase1.principal.solucao.inputs(event.key);
             }
@@ -28124,7 +28806,11 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo3.fase2) {
-        if (telas.jogo.capitulo3.fase2.parte == 2) {
+        if (telas.jogo.capitulo3.fase2.tutorialAllow && telas.jogo.capitulo3.fase2.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo3.fase2.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo3.fase2.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo3.fase2.principal.solucao.inputs(event.key);
             }
@@ -28132,15 +28818,41 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo3.fase3) {
-        if (telas.jogo.capitulo3.fase3.parte == 2) {
+        if (telas.jogo.capitulo3.fase3.tutorialAllow && telas.jogo.capitulo3.fase3.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo3.fase3.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo3.fase3.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo3.fase3.principal.solucao.inputs(event.key);
             }
         }
     }
 
+    else if (telaAtiva == telas.jogo.capitulo3.fase4) {
+        if (telas.jogo.capitulo3.fase4.tutorialAllow && telas.jogo.capitulo3.fase4.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo3.fase4.tutorial.parte ++;
+        }
+    }
+
+    else if (telaAtiva == telas.jogo.capitulo4.fase1) {
+        if (telas.jogo.capitulo4.fase1.tutorialAllow && telas.jogo.capitulo4.fase1.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo4.fase1.tutorial.parte ++;
+        }
+    }
+
+    else if (telaAtiva == telas.jogo.capitulo4.fase2) {
+        if (telas.jogo.capitulo4.fase2.tutorialAllow && telas.jogo.capitulo4.fase2.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo4.fase2.tutorial.parte ++;
+        }
+    }
+
     else if (telaAtiva == telas.jogo.capitulo4.fase3) {
-        if (telas.jogo.capitulo4.fase3.parte == 2) {
+        if (telas.jogo.capitulo3.fase4.tutorialAllow && telas.jogo.capitulo3.fase4.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo3.fase4.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo4.fase3.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo4.fase3.principal.solucao.inputs(event.key);
             }
@@ -28148,7 +28860,11 @@ window.addEventListener("keydown", function(event) {
     }
 
     else if (telaAtiva == telas.jogo.capitulo4.fase4) {
-        if (telas.jogo.capitulo4.fase4.parte == 2) {
+        if (telas.jogo.capitulo4.fase4.tutorialAllow && telas.jogo.capitulo4.fase4.parte != 1 && event.key == "Enter") {
+            telas.jogo.capitulo4.fase4.tutorial.parte ++;
+        }
+
+        else if (telas.jogo.capitulo4.fase4.parte == 2) {
             if (event.key == "Enter" || event.key == "Backspace" || event.key.length == 1) {
                 telas.jogo.capitulo4.fase4.principal.solucao.inputs(event.key);
             }
@@ -28292,11 +29008,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo1.fase1) {
-            if (telas.jogo.capitulo1.fase1.tutorialAllow && telas.jogo.capitulo1.fase1.parte != 1) {
-                telas.jogo.capitulo1.fase1.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo1.fase1.parte == 3) {
+            if (telas.jogo.capitulo1.fase1.parte == 3) {
                 if (telas.jogo.capitulo1.fase1.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo1.fase1.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo1.fase1.final.botoes.exit.x + telas.jogo.capitulo1.fase1.final.botoes.exit.largura1 &&
@@ -28328,11 +29040,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo1.fase2) {
-            if (telas.jogo.capitulo1.fase2.tutorialAllow && telas.jogo.capitulo1.fase2.parte != 1) {
-                telas.jogo.capitulo1.fase2.tutorialAllow = false;
-            }
-
-            else if (telas.jogo.capitulo1.fase2.parte == 2) {
+            if (telas.jogo.capitulo1.fase2.parte == 2 && !telas.jogo.capitulo1.fase2.tutorialAllow) {
                 for (let i = 0; i < telas.jogo.capitulo1.fase2.principal.solucao.alters.length; i++) {
                     if (event.clientX >= telas.jogo.capitulo1.fase2.principal.solucao.alters[i].x &&
                         event.clientX <= telas.jogo.capitulo1.fase2.principal.solucao.alters[i].x + telas.jogo.capitulo1.fase2.principal.solucao.alters[i].larg &&
@@ -28378,11 +29086,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo1.fase3) {
-            if (telas.jogo.capitulo1.fase3.tutorialAllow && telas.jogo.capitulo1.fase3.parte != 1) {
-                telas.jogo.capitulo1.fase3.tutorialAllow = false;
-            }
-
-            else if (telas.jogo.capitulo1.fase3.parte == 2) {
+            if (telas.jogo.capitulo1.fase3.parte == 2 && !telas.jogo.capitulo1.fase2.tutorialAllow) {
                 for (let i = 0; i < telas.jogo.capitulo1.fase3.principal.solucao.alters.length; i++) {
                     if (event.clientX >= telas.jogo.capitulo1.fase3.principal.solucao.alters[i].x &&
                         event.clientX <= telas.jogo.capitulo1.fase3.principal.solucao.alters[i].x + telas.jogo.capitulo1.fase3.principal.solucao.alters[i].larg &&
@@ -28428,11 +29132,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo1.fase4) {
-            if (telas.jogo.capitulo1.fase4.tutorialAllow && telas.jogo.capitulo1.fase4.parte != 1) {
-                telas.jogo.capitulo1.fase4.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo1.fase4.parte == 2) {
+            if (telas.jogo.capitulo1.fase4.parte == 2 && !telas.jogo.capitulo1.fase4.tutorialAllow) {
                 if (event.clientX >= telas.jogo.capitulo1.fase4.principal.solucao.x - telas.jogo.capitulo1.fase4.principal.solucao.largura &&
                     event.clientX <= telas.jogo.capitulo1.fase4.principal.solucao.x + telas.jogo.capitulo1.fase4.principal.solucao.largura &&
                     event.clientY >= telas.jogo.capitulo1.fase4.principal.solucao.y - telas.jogo.capitulo1.fase4.principal.solucao.largura &&
@@ -28503,8 +29203,7 @@ canvas.onmousedown = function(event) {
                         event.clientX <= telas.jogo.capitulo1.fase5.final.botoes.play.x + telas.jogo.capitulo1.fase5.final.botoes.play.largura1 &&
                         event.clientY >= telas.jogo.capitulo1.fase5.final.botoes.play.y &&
                         event.clientY <= telas.jogo.capitulo1.fase5.final.botoes.play.y + telas.jogo.capitulo1.fase5.final.botoes.play.altura1) {
-                        telas.jogo.capitulo2.fase1.reset();
-                        mudaTela(telas.jogo.capitulo2.fase1);
+                        mudaTela(telas.jogo.capitulo2.abertura);
                     }
                 }
 
@@ -28526,11 +29225,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo2.fase1) {
-            if (telas.jogo.capitulo2.fase1.tutorialAllow && telas.jogo.capitulo2.fase1.parte != 1) {
-                telas.jogo.capitulo2.fase1.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo2.fase1.allowClick) {
+            if (telas.jogo.capitulo2.fase1.parte == 3) {
                 if (telas.jogo.capitulo2.fase1.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo2.fase1.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo2.fase1.final.botoes.exit.x + telas.jogo.capitulo2.fase1.final.botoes.exit.largura1 &&
@@ -28563,11 +29258,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo2.fase2) {
-            if (telas.jogo.capitulo2.fase2.tutorialAllow && telas.jogo.capitulo2.fase2.parte != 1) {
-                telas.jogo.capitulo2.fase2.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo2.fase2.allowClick) {
+            if (telas.jogo.capitulo2.fase2.parte == 3) {
                 if (telas.jogo.capitulo2.fase2.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo2.fase2.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo2.fase2.final.botoes.exit.x + telas.jogo.capitulo2.fase2.final.botoes.exit.largura1 &&
@@ -28599,11 +29290,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo2.fase3) {
-            if (telas.jogo.capitulo2.fase3.tutorialAllow && telas.jogo.capitulo2.fase3.tutorial.parte != 1) {
-                telas.jogo.capitulo2.fase3.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo2.fase3.allowClick) {
+            if (telas.jogo.capitulo2.fase3.parte == 3) {
                 if (telas.jogo.capitulo2.fase3.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo2.fase3.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo2.fase3.final.botoes.exit.x + telas.jogo.capitulo2.fase3.final.botoes.exit.largura1 &&
@@ -28635,11 +29322,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo2.fase4) {
-            if (telas.jogo.capitulo2.fase4.tutorialAllow && telas.jogo.capitulo2.fase4.tutorial.parte != 1) {
-                telas.jogo.capitulo2.fase4.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo2.fase4.allowClick) {
+            if (telas.jogo.capitulo2.fase4.parte == 3) {
                 if (telas.jogo.capitulo2.fase4.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo2.fase4.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo2.fase4.final.botoes.exit.x + telas.jogo.capitulo2.fase4.final.botoes.exit.largura1 &&
@@ -28714,11 +29397,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo3.fase1) {
-            if (telas.jogo.capitulo3.fase1.tutorialAllow && telas.jogo.capitulo3.fase1.parte != 1) {
-                telas.jogo.capitulo3.fase1.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo3.fase1.allowClick) {
+            if (telas.jogo.capitulo3.fase1.parte == 3) {
                 if (telas.jogo.capitulo3.fase1.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo3.fase1.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo3.fase1.final.botoes.exit.x + telas.jogo.capitulo3.fase1.final.botoes.exit.largura1 &&
@@ -28750,11 +29429,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo3.fase2) {
-            if (telas.jogo.capitulo3.fase2.tutorialAllow && telas.jogo.capitulo3.fase2.parte != 1) {
-                telas.jogo.capitulo3.fase2.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo3.fase2.allowClick) {
+            if (telas.jogo.capitulo3.fase2.parte == 3) {
                 if (telas.jogo.capitulo3.fase2.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo3.fase2.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo3.fase2.final.botoes.exit.x + telas.jogo.capitulo3.fase2.final.botoes.exit.largura1 &&
@@ -28786,11 +29461,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo3.fase3) {
-            if (telas.jogo.capitulo3.fase3.tutorialAllow && telas.jogo.capitulo3.fase3.parte != 1) {
-                telas.jogo.capitulo3.fase3.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo3.fase3.allowClick) {
+            if (telas.jogo.capitulo3.fase3.parte == 3) {
                 if (telas.jogo.capitulo3.fase3.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo3.fase3.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo3.fase3.final.botoes.exit.x + telas.jogo.capitulo3.fase3.final.botoes.exit.largura1 &&
@@ -28822,11 +29493,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo3.fase4) {
-            if (telas.jogo.capitulo3.fase4.tutorialAllow && telas.jogo.capitulo3.fase4.parte != 1) {
-                telas.jogo.capitulo3.fase4.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo3.fase4.parte == 2) {
+            if (telas.jogo.capitulo3.fase4.parte == 2 && !telas.jogo.capitulo3.fase4.tutorialAllow) {
                 if (event.clientX >= telas.jogo.capitulo3.fase4.principal.solucao.x &&
                     event.clientX <= telas.jogo.capitulo3.fase4.principal.solucao.x + telas.jogo.capitulo3.fase4.principal.solucao.largura &&
                     event.clientY >= telas.jogo.capitulo3.fase4.principal.solucao.y1 &&
@@ -28935,12 +29602,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo4.fase1) {
-            if (telas.jogo.capitulo4.fase1.tutorialAllow && telas.jogo.capitulo4.fase1.parte != 1) {
-                telas.jogo.capitulo4.fase1.tutorial.parte ++;
-                telas.jogo.capitulo4.fase1.tutorialAllow = false;
-            }
-
-            else if (telas.jogo.capitulo4.fase1.parte == 2){
+            if (telas.jogo.capitulo4.fase1.parte == 2 && !telas.jogo.capitulo4.fase1.tutorialAllow) {
                 if (telas.jogo.capitulo4.fase1.principal.parte == 2) {
                     if (event.clientX >= telas.jogo.capitulo4.fase1.principal.solucao.x &&
                         event.clientX <= telas.jogo.capitulo4.fase1.principal.solucao.x + telas.jogo.capitulo4.fase1.principal.solucao.larg &&
@@ -28976,7 +29638,7 @@ canvas.onmousedown = function(event) {
                 }
             }
 
-            else if (telas.jogo.capitulo4.fase1.parte == 3) {
+            else if (telas.jogo.capitulo4.fase1.parte == 3 && telas.jogo.capitulo4.fase1.allowBotoes) {
                 if (event.clientX >= telas.jogo.capitulo4.fase1.final.botoes.retry.x &&
                     event.clientX <= telas.jogo.capitulo4.fase1.final.botoes.retry.x + telas.jogo.capitulo4.fase1.final.botoes.retry.largura1 &&
                     event.clientY >= telas.jogo.capitulo4.fase1.final.botoes.retry.y &&
@@ -29014,7 +29676,7 @@ canvas.onmousedown = function(event) {
                 }
             }
 
-            else if (telas.jogo.capitulo4.fase2.parte == 3) {
+            else if (telas.jogo.capitulo4.fase2.parte == 3 && telas.jogo.capitulo4.fase2.allowClick) {
                 if (event.clientX >= telas.jogo.capitulo4.fase2.final.botoes.retry.x &&
                     event.clientX <= telas.jogo.capitulo4.fase2.final.botoes.retry.x + telas.jogo.capitulo4.fase2.final.botoes.retry.largura1 &&
                     event.clientY >= telas.jogo.capitulo4.fase2.final.botoes.retry.y &&
@@ -29044,11 +29706,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo4.fase3) {
-            if (telas.jogo.capitulo4.fase3.tutorialAllow && telas.jogo.capitulo4.fase3.parte != 1) {
-                telas.jogo.capitulo4.fase3.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo4.fase3.parte == 3) {
+            if (telas.jogo.capitulo4.fase3.parte == 3) {
                 if (telas.jogo.capitulo4.fase3.allowClick) {
                     if (event.clientX >= telas.jogo.capitulo4.fase3.final.botoes.exit.x &&
                         event.clientX <= telas.jogo.capitulo4.fase3.final.botoes.exit.x + telas.jogo.capitulo4.fase3.final.botoes.exit.largura1 &&
@@ -29080,11 +29738,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo4.fase4) {
-            if (telas.jogo.capitulo4.fase4.tutorialAllow && telas.jogo.capitulo4.fase4.parte != 1) {
-                telas.jogo.capitulo4.fase4.tutorial.parte ++;
-            }
-
-            else if (telas.jogo.capitulo4.fase4.parte == 2) {
+            if (telas.jogo.capitulo4.fase4.parte == 2 && !telas.jogo.capitulo4.fase4.tutorialAllow) {
                 if (telas.jogo.capitulo4.fase4.principal.parte == 2 &&
                     telas.jogo.capitulo4.fase4.principal.questao.numQuestao1 == 1) {
                     if (event.clientX >= telas.jogo.capitulo4.fase4.principal.solucao.x &&
@@ -29153,11 +29807,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo4.fase5) {
-            if (telas.jogo.capitulo4.fase5.parte != 1 && telas.jogo.capitulo4.fase5.tutorialAllow) {
-                telas.jogo.capitulo4.fase5.tutorialAllow = false;
-            }
-
-            else if (telas.jogo.capitulo4.fase5.parte == 2 && telas.jogo.capitulo4.fase5.principal.questao.clickAllow) {
+            if (telas.jogo.capitulo4.fase5.parte == 2 && telas.jogo.capitulo4.fase5.principal.questao.clickAllow) {
                 telas.jogo.capitulo4.fase5.principal.questao.verificaClick(event.clientX, event.clientY);
             }
 
@@ -29190,7 +29840,7 @@ canvas.onmousedown = function(event) {
         }
 
         else if (telaAtiva == telas.jogo.capitulo5.fase1) {
-            if (telas.jogo.capitulo5.fase1.parte == 2) {
+            if (telas.jogo.capitulo5.fase1.parte == 2 && !telas.jogo.capitulo5.fase1.tutorialAllow) {
                 telas.jogo.capitulo5.fase1.principal.questao.banco2.forEach(item => {
                     if (event.clientX >= item.compartimento.posX &&
                         event.clientX <= item.compartimento.posX + 50 &&
@@ -30351,5 +31001,5 @@ function loop() {
     requestAnimationFrame(loop);
 }
 
-mudaTela(telas.menuInicial);
+mudaTela(telas.jogo.capitulo2.fase3);
 loop();
